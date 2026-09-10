@@ -59,17 +59,20 @@ function updateLiveUrlFile() {
  NeoCalc Pro - Live Website Links
 =====================================================
 
-1. Primary Live Link (Direct access, no password needed):
+⭐ 1. Permanent Live Link (24/7 Online via GitHub Pages):
+   https://vaibhavsarnobat1-bit.github.io/Build-a-Calculator/
+
+2. Quick Direct Tunnel Link (localhost.run):
    ${primaryLiveUrl || 'Starting...'}
 
-2. Backup Live Link (Localtunnel):
+3. Backup Tunnel Link (Localtunnel):
    ${backupLiveUrl || 'Starting...'}
    ${publicIp ? `Tunnel Password (if asked): ${publicIp}` : ''}
 
-3. Local Link (On this PC):
+4. Local Link (On this PC):
    http://localhost:${PORT}
 
-Status: Active & Online
+Status: Active, Built & 100% Online
 Last Updated: ${timeStr}
 =====================================================
 `;
