@@ -1,22 +1,20 @@
 @echo off
-title Push Task 1 to GitHub
+title Push Task 2 to GitHub
 cd /d "%~dp0"
 
 echo =========================================================
-echo   Push NeoCalc Pro (Task 1) to GitHub
+echo   Push NeoCalc Pro (Task 2) to GitHub
 echo =========================================================
 echo.
-echo Make sure you have created the repository on GitHub:
-echo https://github.com/new
+echo 1. Create a new repository on GitHub:
+echo    https://github.com/new
+echo.
+echo (Do NOT initialize with README, .gitignore, or license)
 echo.
 
-set /p REPO_NAME="Enter your GitHub repository name (e.g. Build-a-Calculator or Task-1-Calculator): "
+set /p REPO_NAME="Enter your GitHub repository name [Default: Build-a-Calculator]: "
 
-if "%REPO_NAME%"=="" (
-    echo No repository name entered. Exiting...
-    pause
-    exit /b
-)
+if "%REPO_NAME%"=="" set REPO_NAME=Build-a-Calculator
 
 echo.
 echo Setting remote origin to https://github.com/vaibhavsarnobat1-bit/%REPO_NAME%.git ...
