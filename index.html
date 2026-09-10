@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyber-neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeoCalc Pro — Next-Gen Smart Calculator</title>
+  <meta name="description" content="A next-generation, feature-packed smart calculator with Standard & Scientific modes, Calculation History tape, dynamic themes, audio feedback, unit conversions, and keyboard support.">
+  
+  <!-- Google Fonts: Outfit for sleek modern UI & JetBrains Mono for pristine numbers -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon / App Icons -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+
+  <!-- Font Awesome Icons for polished visuals -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ThreeUI Elemental Water Interactive WebGL2 Ripple Canvas (No Logo) -->
+  <canvas id="waterCanvas" class="water-canvas"></canvas>
+
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <div class="app-wrapper">
+    <!-- Main Calculator Shell -->
+    <main class="calculator-card" id="calculatorApp">
+      
+      <!-- Top Header Ribbon -->
+      <header class="calc-header">
+        <div class="brand">
+          <div class="brand-logo">
+            <img src="favicon.svg" alt="NeoCalc Pro Logo" class="brand-logo-img">
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">NeoCalc<span class="badge">PRO</span></span>
+            <span class="brand-subtitle">Smart Arithmetic & Scientific Engine</span>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <!-- Sound FX Toggle -->
+          <button class="icon-btn" id="soundToggleBtn" title="Toggle Sound Feedback (S)" aria-label="Toggle Sound">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+          
+          <!-- Mode Switcher (Standard / Scientific) -->
+          <div class="mode-pill-toggle">
+            <button class="mode-btn active" id="modeStdBtn" data-mode="standard">Std</button>
+            <button class="mode-btn" id="modeSciBtn" data-mode="scientific">Sci</button>
+          </div>
+
+          <!-- History Drawer Button -->
+          <button class="icon-btn" id="historyToggleBtn" title="Calculation History (H)" aria-label="Open History">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span class="history-dot" id="historyDot"></span>
+          </button>
+
+          <!-- Quick Converter Tool Button -->
+          <button class="icon-btn" id="toolsToggleBtn" title="Quick Tools & Converter (T)" aria-label="Open Tools">
+            <i class="fa-solid fa-sliders"></i>
+          </button>
+
+          <!-- Theme Picker Dropdown -->
+          <div class="theme-dropdown-container">
+            <button class="icon-btn" id="themeDropdownBtn" title="Change Theme" aria-label="Select Theme">
+              <i class="fa-solid fa-palette"></i>
+            </button>
+            <div class="theme-menu" id="themeMenu">
+              <button class="theme-opt active" data-theme-val="cyber-neon">
+                <span class="theme-dot neon"></span> Cyber Neon
+              </button>
+              <button class="theme-opt" data-theme-val="frost-glass">
+                <span class="theme-dot frost"></span> Frost Glass
+              </button>
+              <button class="theme-opt" data-theme-val="sunset-glow">
+                <span class="theme-dot sunset"></span> Sunset Glow
+              </button>
+              <button class="theme-opt" data-theme-val="matrix-dark">
+                <span class="theme-dot matrix"></span> Matrix Terminal
+              </button>
+              <button class="theme-opt" data-theme-val="midnight-gold">
+                <span class="theme-dot gold"></span> Midnight Gold
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Display Section -->
+      <section class="display-container" id="displayContainer" tabindex="0" title="Click to copy result">
+        <!-- Display badges -->
+        <div class="display-meta">
+          <div class="status-tags">
+            <span class="meta-tag deg-rad" id="angleUnitBtn" title="Toggle DEG/RAD (Scientific)">DEG</span>
+            <span class="meta-tag memory-tag" id="memoryIndicator">M [0]</span>
+          </div>
+          <button class="copy-btn" id="copyResultBtn" title="Copy result to clipboard">
+            <i class="fa-regular fa-copy"></i>
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+
+        <!-- Expression and Live Result -->
+        <div class="screen-view">
+          <div class="expression-line" id="expressionDisplay" placeholder="0"></div>
+          <div class="main-result-line" id="resultDisplay">0</div>
+        </div>
+      </section>
+
+      <!-- Quick Memory Bar -->
+      <div class="memory-bar">
+        <button class="mem-btn" data-action="mc" title="Memory Clear">MC</button>
+        <button class="mem-btn" data-action="mr" title="Memory Recall">MR</button>
+        <button class="mem-btn" data-action="m-plus" title="Memory Add (M+)">M+</button>
+        <button class="mem-btn" data-action="m-minus" title="Memory Subtract (M-)">M-</button>
+        <button class="mem-btn" data-action="ms" title="Memory Store (MS)">MS</button>
+      </div>
+
+      <!-- Keypad Grid Wrapper -->
+      <div class="keypad-wrapper" id="keypadWrapper">
+        
+        <!-- Scientific Extended Matrix (Collapsible / Toggleable) -->
+        <div class="scientific-panel" id="scientificPanel">
+          <button class="key sci-key" data-sci="sin">sin</button>
+          <button class="key sci-key" data-sci="cos">cos</button>
+          <button class="key sci-key" data-sci="tan">tan</button>
+          <button class="key sci-key" data-sci="log">log</button>
+          <button class="key sci-key" data-sci="ln">ln</button>
+
+          <button class="key sci-key" data-sci="asin">sin⁻¹</button>
+          <button class="key sci-key" data-sci="acos">cos⁻¹</button>
+          <button class="key sci-key" data-sci="atan">tan⁻¹</button>
+          <button class="key sci-key" data-sci="pow">xʸ</button>
+          <button class="key sci-key" data-sci="sq">x²</button>
+
+          <button class="key sci-key" data-sci="sqrt">√x</button>
+          <button class="key sci-key" data-sci="cbrt">∛x</button>
+          <button class="key sci-key" data-sci="fact">n!</button>
+          <button class="key sci-key" data-sci="pi">π</button>
+          <button class="key sci-key" data-sci="e">e</button>
+          
+          <button class="key sci-key" data-sci="inv">1/x</button>
+          <button class="key sci-key" data-sci="abs">|x|</button>
+          <button class="key sci-key" data-sci="exp">EXP</button>
+          <button class="key sci-key" data-sci="ans">Ans</button>
+          <button class="key sci-key" data-sci="rand">RAND</button>
+        </div>
+
+        <!-- Primary Standard Keypad -->
+        <div class="keypad-grid" id="mainKeypad">
+          <!-- Row 1 -->
+          <button class="key func-key clear-all" data-key="Escape" data-action="all-clear" id="keyAC" title="Clear All (Esc)">AC</button>
+          <button class="key func-key" data-key="Backspace" data-action="backspace" id="keyDel" title="Delete (Backspace)"><i class="fa-solid fa-delete-left"></i></button>
+          <button class="key func-key" data-key="%" data-action="percent" title="Percentage (%)">%</button>
+          <button class="key operator-key" data-key="/" data-action="divide" title="Divide (/)">÷</button>
+
+          <!-- Row 2 -->
+          <button class="key num-key" data-key="7">7</button>
+          <button class="key num-key" data-key="8">8</button>
+          <button class="key num-key" data-key="9">9</button>
+          <button class="key operator-key" data-key="*" data-action="multiply" title="Multiply (*)">×</button>
+
+          <!-- Row 3 -->
+          <button class="key num-key" data-key="4">4</button>
+          <button class="key num-key" data-key="5">5</button>
+          <button class="key num-key" data-key="6">6</button>
+          <button class="key operator-key" data-key="-" data-action="subtract" title="Subtract (-)">−</button>
+
+          <!-- Row 4 -->
+          <button class="key num-key" data-key="1">1</button>
+          <button class="key num-key" data-key="2">2</button>
+          <button class="key num-key" data-key="3">3</button>
+          <button class="key operator-key" data-key="+" data-action="add" title="Add (+)">+</button>
+
+          <!-- Row 5 -->
+          <button class="key func-key" data-action="negate" title="Toggle Positive/Negative (±)">±</button>
+          <button class="key num-key" data-key="0">0</button>
+          <button class="key num-key" data-key="." data-action="decimal">.</button>
+          <button class="key equals-key" data-key="Enter" data-action="calculate" id="keyEquals" title="Calculate (Enter)">=</button>
+        </div>
+
+      </div>
+
+      <!-- Creator Info Footer -->
+      <footer class="calc-footer">
+        <!-- Creator Profile & Contact -->
+        <div class="creator-card">
+          <div class="creator-header">
+            <div class="creator-avatar">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div class="creator-meta">
+              <span class="creator-role">Created with <i class="fa-solid fa-heart heart-pulse"></i> by</span>
+              <h4 class="creator-name">Vaibhav Sarnobat</h4>
+            </div>
+          </div>
+
+          <div class="creator-links">
+            <a href="mailto:vaibhavsarnobat1@gmail.com" class="contact-pill email-pill" title="Send email to Vaibhav Sarnobat">
+              <i class="fa-solid fa-envelope"></i>
+              <span class="contact-text">vaibhavsarnobat1@gmail.com</span>
+            </a>
+
+            <a href="https://wa.me/917248949501?text=Hi%20Vaibhav,%20contacting%20you%20from%20NeoCalc%20Pro!" target="_blank" rel="noopener noreferrer" class="contact-pill whatsapp-pill" title="Click to chat directly on WhatsApp">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span class="contact-text">+91 7248949501</span>
+              <span class="chat-badge"><i class="fa-solid fa-paper-plane"></i> Chat</span>
+            </a>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+
+    <!-- Slide-over Drawer 1: Interactive Calculation History -->
+    <aside class="drawer history-drawer" id="historyDrawer">
+      <div class="drawer-header">
+        <div class="drawer-title">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <h3>Calculation Tape</h3>
+        </div>
+        <div class="drawer-actions">
+          <button class="mini-btn" id="exportHistoryBtn" title="Export History as .txt"><i class="fa-solid fa-file-arrow-down"></i> Export</button>
+          <button class="mini-btn danger" id="clearHistoryBtn" title="Clear all history"><i class="fa-regular fa-trash-can"></i> Clear</button>
+          <button class="close-drawer-btn" id="closeHistoryBtn" aria-label="Close History"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      
+      <div class="history-list" id="historyList">
+        <div class="empty-history" id="emptyHistoryMsg">
+          <i class="fa-solid fa-receipt"></i>
+          <p>No calculations yet</p>
+          <span>Calculations you perform will appear here with timestamps.</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Slide-over Drawer 2: Quick Multi-Tools & Unit Converter -->
+    <aside class="drawer tools-drawer" id="toolsDrawer">
+      <div class="drawer-header">
+        <div class="drawer-title">
+          <i class="fa-solid fa-sliders"></i>
+          <h3>Smart Quick Tools</h3>
+        </div>
+        <button class="close-drawer-btn" id="closeToolsBtn" aria-label="Close Tools"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="tools-content">
+        <!-- Tab navigation inside drawer -->
+        <div class="tools-tabs">
+          <button class="tool-tab active" data-tab="converter">Unit Converter</button>
+          <button class="tool-tab" data-tab="tip">Tip & Split</button>
+          <button class="tool-tab" data-tab="tax">GST / Tax</button>
+        </div>
+
+        <!-- Tab 1: Unit Converter -->
+        <div class="tool-pane active" id="paneConverter">
+          <div class="form-group">
+            <label>Conversion Category</label>
+            <select id="convCategory" class="custom-select">
+              <option value="length">Length (m, km, ft, inch, mi)</option>
+              <option value="weight">Weight (kg, g, lb, oz)</option>
+              <option value="temp">Temperature (°C, °F, K)</option>
+              <option value="data">Data Size (B, KB, MB, GB, TB)</option>
+            </select>
+          </div>
+
+          <div class="converter-box">
+            <div class="conv-row">
+              <label>From</label>
+              <div class="input-with-select">
+                <input type="number" id="convFromVal" value="1" step="any">
+                <select id="convFromUnit" class="custom-select-mini"></select>
+              </div>
+            </div>
+
+            <div class="conv-divider">
+              <button class="icon-swap-btn" id="convSwapBtn" title="Swap units"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+            </div>
+
+            <div class="conv-row">
+              <label>To</label>
+              <div class="input-with-select">
+                <input type="text" id="convToVal" readonly>
+                <select id="convToUnit" class="custom-select-mini"></select>
+              </div>
+            </div>
+
+            <button class="action-btn" id="pushToCalcBtn">
+              <i class="fa-solid fa-arrow-turn-up"></i> Send Result to Calculator
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Tip & Bill Splitter -->
+        <div class="tool-pane" id="paneTip">
+          <div class="form-group">
+            <label>Bill Amount ($/₹/€)</label>
+            <input type="number" id="tipBillAmount" placeholder="0.00" value="100">
+          </div>
+          
+          <div class="form-group">
+            <label>Tip Percentage: <span id="tipPercentLabel">15%</span></label>
+            <div class="tip-preset-pills">
+              <button class="tip-pill" data-pct="5">5%</button>
+              <button class="tip-pill" data-pct="10">10%</button>
+              <button class="tip-pill active" data-pct="15">15%</button>
+              <button class="tip-pill" data-pct="18">18%</button>
+              <button class="tip-pill" data-pct="20">20%</button>
+            </div>
+            <input type="range" id="tipRange" min="0" max="50" value="15" class="custom-slider">
+          </div>
+
+          <div class="form-group">
+            <label>Number of People: <span id="splitCountLabel">2</span></label>
+            <div class="stepper-box">
+              <button class="step-btn" id="decPersonBtn">-</button>
+              <span id="splitCountDisplay">2</span>
+              <button class="step-btn" id="incPersonBtn">+</button>
+            </div>
+          </div>
+
+          <div class="results-card">
+            <div class="res-row">
+              <span>Tip Amount</span>
+              <strong id="tipAmountResult">$15.00</strong>
+            </div>
+            <div class="res-row">
+              <span>Total Bill</span>
+              <strong id="totalWithTipResult">$115.00</strong>
+            </div>
+            <div class="res-row highlight">
+              <span>Each Person Pays</span>
+              <strong id="perPersonResult">$57.50</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: GST / Tax Calculator -->
+        <div class="tool-pane" id="paneTax">
+          <div class="form-group">
+            <label>Net / Base Price</label>
+            <input type="number" id="taxBasePrice" placeholder="0.00" value="1000">
+          </div>
+          <div class="form-group">
+            <label>Tax Rate (%)</label>
+            <div class="tip-preset-pills">
+              <button class="tax-pill" data-tax="5">5%</button>
+              <button class="tax-pill" data-tax="12">12%</button>
+              <button class="tax-pill active" data-tax="18">18%</button>
+              <button class="tax-pill" data-tax="28">28%</button>
+            </div>
+            <input type="number" id="taxCustomRate" placeholder="Custom %" value="18">
+          </div>
+
+          <div class="results-card">
+            <div class="res-row">
+              <span>Tax Amount</span>
+              <strong id="taxAmountResult">$180.00</strong>
+            </div>
+            <div class="res-row highlight">
+              <span>Final Total (Inclusive)</span>
+              <strong id="taxTotalResult">$1180.00</strong>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Toast Notification Overlay -->
+    <div class="toast-notice" id="toastNotice">
+      <i class="fa-solid fa-circle-check"></i>
+      <span id="toastMsg">Copied to clipboard!</span>
+    </div>
+  </div>
+
+  <script src="water-background.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

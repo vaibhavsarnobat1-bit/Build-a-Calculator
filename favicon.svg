@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Radial Cyber Glow -->
+    <radialGradient id="bgGlow" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#13203c"/>
+      <stop offset="55%" stop-color="#09101f"/>
+      <stop offset="100%" stop-color="#04070e"/>
+    </radialGradient>
+
+    <!-- Outer Border Neon Gradient -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="45%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#ff007a"/>
+    </linearGradient>
+
+    <!-- 'N' Left Pillar Gradient -->
+    <linearGradient id="stemLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <!-- 'N' Diagonal Cyber Slash Gradient -->
+    <linearGradient id="diagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ff007a"/>
+    </linearGradient>
+
+    <!-- 'N' Right Pillar Gradient -->
+    <linearGradient id="stemRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff007a"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+
+    <!-- Outer Drop Glow -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#00f0ff" flood-opacity="0.45"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#ff007a" flood-opacity="0.35"/>
+    </filter>
+
+    <filter id="coreGlow">
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#00f0ff" flood-opacity="0.75"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Squircle Card -->
+  <rect x="28" y="28" width="456" height="456" rx="116" fill="url(#bgGlow)" stroke="url(#borderGrad)" stroke-width="12" filter="url(#neonGlow)"/>
+
+  <!-- Futuristic Cyber Reticle Circles -->
+  <circle cx="256" cy="256" r="168" fill="none" stroke="rgba(0, 240, 255, 0.14)" stroke-width="2" stroke-dasharray="10 8"/>
+  <circle cx="256" cy="256" r="120" fill="none" stroke="rgba(255, 0, 122, 0.14)" stroke-width="2" stroke-dasharray="6 6"/>
+
+  <!-- Iconic 'N' Cyber Emblem -->
+  <g filter="url(#coreGlow)">
+    <!-- Left Vertical Stem -->
+    <path d="M 124 138 C 124 122 136 110 152 110 L 184 110 C 200 110 212 122 212 138 L 212 374 C 212 390 200 402 184 402 L 152 402 C 136 402 124 390 124 374 Z" fill="url(#stemLeft)"/>
+
+    <!-- Dynamic Diagonal Energy Beam -->
+    <path d="M 184 110 L 328 362 C 335 374 348 382 362 382 L 368 382 C 382 382 388 372 388 360 L 388 338 L 228 120 C 221 108 208 100 194 100 L 184 110 Z" fill="url(#diagGrad)"/>
+
+    <!-- Right Vertical Stem -->
+    <path d="M 300 138 C 300 122 312 110 328 110 L 360 110 C 376 110 388 122 388 138 L 388 374 C 388 390 376 402 360 402 L 328 402 C 312 402 300 390 300 374 Z" fill="url(#stemRight)"/>
+
+    <!-- Energy Highlight Nodes -->
+    <circle cx="168" cy="142" r="11" fill="#ffffff"/>
+    <circle cx="344" cy="370" r="11" fill="#ffffff"/>
+    <circle cx="256" cy="256" r="9" fill="#00f0ff"/>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment / temporary files
+.DS_Store
+Thumbs.db
+*.log
+LIVE_URL.txt
